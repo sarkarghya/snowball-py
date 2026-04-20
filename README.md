@@ -35,6 +35,35 @@ Tests:
 uv run pytest
 ```
 
+## Roadmap
+
+snowball-py is intentionally small and dependency-light today. The direction is to grow toward the same class of capabilities as a full **CPU/GPU probabilistic-QA engine** (training, persistence, many concurrent quizzes, production-oriented ops)—without sacrificing a clear Python surface.
+
+### Acceleration (CUDA and hardware)
+
+- **GPU-backed math** — Move the heaviest paths (posterior updates, training accumulation, candidate-question scoring at scale) behind a backend that can use **CUDA** (e.g. CuPy, or JAX on GPU), with a **NumPy CPU fallback** so tests and laptops stay simple.
+- **Streams and memory** — Mirror a serious GPU stack: **non-blocking streams**, bounded **device memory pools**, and batched work so large \(Q \times A \times T\) layouts do not spend all their time allocating.
+- **Precision** — Standardise on **float32** on GPU for throughput; offer **float64** where numerical stability matters (mirroring engines that only exposed float on CUDA first, then broadened types).
+
+### Engine depth (parity with a “full” native core)
+
+- **Offline training** — First-class **`Train`-style** APIs: ingest batches of answered questions and target labels without running an interactive quiz, for replay and dataset-driven fitting.
+- **Binary KB lifecycle** — **Save/load** of the full knowledge base to disk in a **versioned** container (double-buffered writes optional), not only ad-hoc pickles.
+- **Identity and sessions** — **Stable vs compact IDs** for questions, targets, and quizzes; **resume** quizzes from stored answers; **retention policies** (max quizzes, max age) for long-running services.
+- **Diagnostics** — Richer **statistics** (e.g. total questions asked, per-target frequency exports) for analytics and metering.
+
+### Operations and integration
+
+- **Parallelism** — **Worker pools** for offline training jobs and batch benchmarks so multicore hosts are used without nested thread explosions.
+- **Observability** — Structured **logging** and optional **metrics hooks** (latency per phase, GPU memory high-water marks).
+- **Embeddable service** — Optional thin **HTTP or gRPC** layer around the engine for integration tests and non-Python clients, keeping the core importable as a library.
+
+### CPU path
+
+- **Vectorised CPU** — Where GPU is unavailable, push more work through **NumPy layout discipline**, **Numba**, or small **SIMD-friendly** kernels so the CPU story stays competitive for modest dimensions.
+
+Order of attack is not fixed; feedback and benchmarks will drive whether CUDA landings or persistence/session APIs come first.
+
 ## Figures
 
 Representative outputs from the bundled benchmark and graph utilities:
