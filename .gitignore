@@ -6,6 +6,5 @@ __pycache__/
 dist/
 build/
 .venv/
-plots/
 *.pkl
 .pytest_cache/
