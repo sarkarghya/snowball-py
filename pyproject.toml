@@ -1,0 +1,30 @@
+[project]
+name = "snowball-py"
+version = "0.1.0"
+description = "Probabilistic question-answering engine for product/service survey discovery"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+]
+
+[project.scripts]
+snowball = "snowball.cli:main"
+snowball-bench = "snowball.benchmark:main"
+snowball-graphs = "snowball.graphs:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+]

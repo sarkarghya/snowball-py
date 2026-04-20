@@ -1,0 +1,11 @@
+# snowball-py
+
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+.venv/
+plots/
+*.pkl
+.pytest_cache/
